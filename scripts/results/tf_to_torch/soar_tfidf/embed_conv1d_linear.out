@@ -1,18 +1,22 @@
 number of word types: 1494, number of word types w/ frequency >= 1: 1494
-/home/soar/anaconda3/envs/soar/lib/python3.8/site-packages/fuzzywuzzy/fuzz.py:11: UserWarning: Using slow pure-python SequenceMatcher. Install python-Levenshtein to remove this warning
+/home/mohayemin/anaconda3/envs/SOAR/lib/python3.8/site-packages/fuzzywuzzy/fuzz.py:11: UserWarning: Using slow pure-python SequenceMatcher. Install python-Levenshtein to remove this warning
   warnings.warn('Using slow pure-python SequenceMatcher. Install python-Levenshtein to remove this warning')
-[info] [2021-01-20 14:23:33.026792] Success!
-[info] [2021-01-20 14:23:33.027183] Avg Rank 2.4
-[info] [2021-01-20 14:23:33.040550] Synthesis time: 5.31023383140564
-[info] [2021-01-20 14:23:33.040774] self.before_0 = lambda x: x.long()
-[info] [2021-01-20 14:23:33.040774] self.var37 = torch.nn.Embedding(50,10)
-[info] [2021-01-20 14:23:33.040774] self.before_2 = lambda x: x.permute(0,2,1)
-[info] [2021-01-20 14:23:33.040774] self.var183 = torch.nn.Conv1d(10,16,3,stride=1,padding=0)
-[info] [2021-01-20 14:23:33.040774] self.before_4 = lambda x: x.permute(0,1,2)
-[info] [2021-01-20 14:23:33.040774] self.var320 = torch.nn.Conv1d(16,8,3,stride=1,padding=0)
-[info] [2021-01-20 14:23:33.040774] self.var322 = lambda x: torch.flatten(x,-2)
-[info] [2021-01-20 14:23:33.040774] self.var576 = torch.nn.Linear(48,1)
+/home/mohayemin/anaconda3/envs/SOAR/lib/python3.8/site-packages/numpy/core/numeric.py:2373: RuntimeWarning: invalid value encountered in multiply
+  y = y * ones_like(cond)
+/home/mohayemin/anaconda3/envs/SOAR/lib/python3.8/site-packages/torch/nn/init.py:388: UserWarning: Initializing zero-element tensors is a no-op
+  warnings.warn("Initializing zero-element tensors is a no-op")
+[info] [2021-08-11 13:15:34.846589] Success!
+[info] [2021-08-11 13:15:34.847097] Avg Rank 2.4
+[info] [2021-08-11 13:15:34.899857] Synthesis time: 3.780219554901123
+[info] [2021-08-11 13:15:34.899981] self.before_0 = lambda x: x.long()
+[info] [2021-08-11 13:15:34.899981] self.var52 = torch.nn.Embedding(50,10)
+[info] [2021-08-11 13:15:34.899981] self.before_2 = lambda x: x.permute(0,1,2)
+[info] [2021-08-11 13:15:34.899981] self.var195 = torch.nn.Conv1d(10,16,3,stride=1,padding=0)
+[info] [2021-08-11 13:15:34.899981] self.before_4 = lambda x: x.permute(0,1,2)
+[info] [2021-08-11 13:15:34.899981] self.var336 = torch.nn.Conv1d(16,8,3,stride=1,padding=0)
+[info] [2021-08-11 13:15:34.899981] self.var339 = lambda x: torch.flatten(x,-2)
+[info] [2021-08-11 13:15:34.899981] self.var607 = torch.nn.Linear(48,1)
 number of word types: 1494, number of word types w/ frequency >= 1: 1494
-/home/soar/anaconda3/envs/soar/lib/python3.8/site-packages/fuzzywuzzy/fuzz.py:11: UserWarning: Using slow pure-python SequenceMatcher. Install python-Levenshtein to remove this warning
+/home/mohayemin/anaconda3/envs/SOAR/lib/python3.8/site-packages/fuzzywuzzy/fuzz.py:11: UserWarning: Using slow pure-python SequenceMatcher. Install python-Levenshtein to remove this warning
   warnings.warn('Using slow pure-python SequenceMatcher. Install python-Levenshtein to remove this warning')
-[info] [2021-01-20 14:23:41.465774] Avg Rank 2.4
+[info] [2021-08-11 13:15:40.199734] Avg Rank 2.4

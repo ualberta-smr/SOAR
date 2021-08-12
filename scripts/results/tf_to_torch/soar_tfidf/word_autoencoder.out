@@ -1,15 +1,15 @@
 number of word types: 1494, number of word types w/ frequency >= 1: 1494
-/home/soar/anaconda3/envs/soar/lib/python3.8/site-packages/fuzzywuzzy/fuzz.py:11: UserWarning: Using slow pure-python SequenceMatcher. Install python-Levenshtein to remove this warning
+/home/mohayemin/anaconda3/envs/SOAR/lib/python3.8/site-packages/fuzzywuzzy/fuzz.py:11: UserWarning: Using slow pure-python SequenceMatcher. Install python-Levenshtein to remove this warning
   warnings.warn('Using slow pure-python SequenceMatcher. Install python-Levenshtein to remove this warning')
-[info] [2021-01-20 14:23:51.249901] Success!
-[info] [2021-01-20 14:23:51.250660] Avg Rank 1.0
-[info] [2021-01-20 14:23:51.274126] Synthesis time: 1.6725761890411377
-[info] [2021-01-20 14:23:51.274336] self.before_0 = lambda x: x.long()
-[info] [2021-01-20 14:23:51.274336] self.var38 = torch.nn.Embedding(1000,50)
-[info] [2021-01-20 14:23:51.274336] self.before_2 = lambda x: x.long()
-[info] [2021-01-20 14:23:51.274336] self.var60 = torch.nn.Embedding(1,1000)
-[info] [2021-01-20 14:23:51.274336] self.var63 = torch.nn.Softmax(dim=3)
+[info] [2021-08-11 13:15:47.494150] Success!
+[info] [2021-08-11 13:15:47.494698] Avg Rank 1.0
+[info] [2021-08-11 13:15:47.557667] Synthesis time: 1.9285988807678223
+[info] [2021-08-11 13:15:47.557785] self.before_0 = lambda x: x.long()
+[info] [2021-08-11 13:15:47.557785] self.var84 = torch.nn.Embedding(1000,50)
+[info] [2021-08-11 13:15:47.557785] self.before_2 = lambda x: x.long()
+[info] [2021-08-11 13:15:47.557785] self.var156 = torch.nn.Embedding(2,1000)
+[info] [2021-08-11 13:15:47.557785] self.var159 = torch.nn.Softmax(dim=3)
 number of word types: 1494, number of word types w/ frequency >= 1: 1494
-/home/soar/anaconda3/envs/soar/lib/python3.8/site-packages/fuzzywuzzy/fuzz.py:11: UserWarning: Using slow pure-python SequenceMatcher. Install python-Levenshtein to remove this warning
+/home/mohayemin/anaconda3/envs/SOAR/lib/python3.8/site-packages/fuzzywuzzy/fuzz.py:11: UserWarning: Using slow pure-python SequenceMatcher. Install python-Levenshtein to remove this warning
   warnings.warn('Using slow pure-python SequenceMatcher. Install python-Levenshtein to remove this warning')
-[info] [2021-01-20 14:23:59.531211] Avg Rank 1.0
+[info] [2021-08-11 13:15:52.906231] Avg Rank 1.0

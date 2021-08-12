@@ -1,23 +1,27 @@
 number of word types: 1494, number of word types w/ frequency >= 1: 1494
-/home/soar/anaconda3/envs/soar/lib/python3.8/site-packages/fuzzywuzzy/fuzz.py:11: UserWarning: Using slow pure-python SequenceMatcher. Install python-Levenshtein to remove this warning
+/home/mohayemin/anaconda3/envs/SOAR/lib/python3.8/site-packages/fuzzywuzzy/fuzz.py:11: UserWarning: Using slow pure-python SequenceMatcher. Install python-Levenshtein to remove this warning
   warnings.warn('Using slow pure-python SequenceMatcher. Install python-Levenshtein to remove this warning')
-[info] [2021-01-20 14:51:04.135199] Success!
-[info] [2021-01-20 14:51:04.135918] Avg Rank 2.4
-[info] [2021-01-20 14:51:04.157271] Synthesis time: 13.791205644607544
-[info] [2021-01-20 14:51:04.157481] self.before_0 = lambda x: x.permute(0,3,1,2)
-[info] [2021-01-20 14:51:04.157481] self.var67 = torch.nn.Conv2d(1,16,(5,5),stride=(1,1),padding=(0,0))
-[info] [2021-01-20 14:51:04.157481] self.var68 = torch.nn.ReLU()
-[info] [2021-01-20 14:51:04.157481] self.var74 = torch.nn.MaxPool2d((2,2),stride=(2,2),padding=(0,0))
-[info] [2021-01-20 14:51:04.157481] self.before_4 = lambda x: x.permute(0,1,2,3)
-[info] [2021-01-20 14:51:04.157481] self.var967 = torch.nn.Conv2d(16,36,(5,5),stride=(1,1),padding=(0,0))
-[info] [2021-01-20 14:51:04.157481] self.var968 = torch.nn.ReLU()
-[info] [2021-01-20 14:51:04.157481] self.var982 = torch.nn.MaxPool2d((2,2),stride=(2,2),padding=(0,0))
-[info] [2021-01-20 14:51:04.157481] self.before_8 = lambda x: x.permute(0,2,3,1)
-[info] [2021-01-20 14:51:04.157481] self.var1003 = lambda x: torch.flatten(x,1)
-[info] [2021-01-20 14:51:04.157481] self.var1795 = torch.nn.Linear(576,128)
-[info] [2021-01-20 14:51:04.157481] self.var1796 = torch.nn.ReLU()
-[info] [2021-01-20 14:51:04.157481] self.var2050 = torch.nn.Linear(128,10)
+/home/mohayemin/anaconda3/envs/SOAR/lib/python3.8/site-packages/torch/nn/init.py:388: UserWarning: Initializing zero-element tensors is a no-op
+  warnings.warn("Initializing zero-element tensors is a no-op")
+/home/mohayemin/anaconda3/envs/SOAR/lib/python3.8/site-packages/torch/nn/functional.py:718: UserWarning: Named tensors and all their associated APIs are an experimental feature and subject to change. Please do not use them for anything important until they are released as stable. (Triggered internally at  /opt/conda/conda-bld/pytorch_1623448216815/work/c10/core/TensorImpl.h:1156.)
+  return torch.max_pool2d(input, kernel_size, stride, padding, dilation, ceil_mode)
+[info] [2021-08-11 14:08:44.946488] Success!
+[info] [2021-08-11 14:08:44.947005] Avg Rank 2.4
+[info] [2021-08-11 14:08:45.018727] Synthesis time: 9.761986017227173
+[info] [2021-08-11 14:08:45.018875] self.before_0 = lambda x: x.permute(0,3,1,2)
+[info] [2021-08-11 14:08:45.018875] self.var42 = torch.nn.Conv2d(1,16,(5,5),stride=(1,1),padding=(0,0))
+[info] [2021-08-11 14:08:45.018875] self.var43 = torch.nn.ReLU()
+[info] [2021-08-11 14:08:45.018875] self.var48 = torch.nn.MaxPool2d((2,2),stride=(2,2),padding=(0,0))
+[info] [2021-08-11 14:08:45.018875] self.before_4 = lambda x: x.permute(0,1,2,3)
+[info] [2021-08-11 14:08:45.018875] self.var702 = torch.nn.Conv2d(16,36,(5,5),stride=(1,1),padding=(0,0))
+[info] [2021-08-11 14:08:45.018875] self.var703 = torch.nn.ReLU()
+[info] [2021-08-11 14:08:45.018875] self.var708 = torch.nn.MaxPool2d((2,2),stride=(2,2),padding=(0,0))
+[info] [2021-08-11 14:08:45.018875] self.before_8 = lambda x: x.permute(0,2,3,1)
+[info] [2021-08-11 14:08:45.018875] self.var727 = lambda x: torch.flatten(x,1)
+[info] [2021-08-11 14:08:45.018875] self.var1508 = torch.nn.Linear(576,128)
+[info] [2021-08-11 14:08:45.018875] self.var1509 = torch.nn.ReLU()
+[info] [2021-08-11 14:08:45.018875] self.var1710 = torch.nn.Linear(128,10)
 number of word types: 1494, number of word types w/ frequency >= 1: 1494
-/home/soar/anaconda3/envs/soar/lib/python3.8/site-packages/fuzzywuzzy/fuzz.py:11: UserWarning: Using slow pure-python SequenceMatcher. Install python-Levenshtein to remove this warning
+/home/mohayemin/anaconda3/envs/SOAR/lib/python3.8/site-packages/fuzzywuzzy/fuzz.py:11: UserWarning: Using slow pure-python SequenceMatcher. Install python-Levenshtein to remove this warning
   warnings.warn('Using slow pure-python SequenceMatcher. Install python-Levenshtein to remove this warning')
-[info] [2021-01-20 14:51:11.024410] Avg Rank 2.4
+[info] [2021-08-11 14:08:50.418216] Avg Rank 2.4

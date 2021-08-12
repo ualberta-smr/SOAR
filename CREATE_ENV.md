@@ -2,6 +2,7 @@
 ### Download and install anaconda
     wget https://repo.anaconda.com/archive/Anaconda3-2020.11-Linux-x86_64.sh
     sha256sum Anaconda3-2020.11-Linux-x86_64.sh
+    bash Anaconda3-2020.11-Linux-x86_64.sh
 
 ### Create a conda environment
 
@@ -22,6 +23,7 @@
     pip3 install wordfreq
     pip3 install fuzzywuzzy
     pip3 install transformers
+    pip3 install sentencepiece
 
 ### Open python shell and install nltk dependencies
 
@@ -29,7 +31,7 @@
     import nltk
     
     nltk.download('punkt')
-    ltk.download('averaged_perceptron_tagger')
+    nltk.download('averaged_perceptron_tagger')
     exit()
 
 ### Download and unzip glove model
@@ -44,7 +46,7 @@
 
 ### Run SOAR!
 
-    python3 synthesis/synthesizer/tf_to_torch/torch_synthesizer.py -b conv_for_text -debug -errmsg        
+    python3 synthesis/synthesizer/tf_to_torch/torch_synthesizer.py -b conv_for_text -errmsg        
 
 
 
