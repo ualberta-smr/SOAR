@@ -39,7 +39,7 @@ class InitVisitor(ast.NodeVisitor):
     def print(self, file_path):
         if self.surrounding_api_calls:
             code_lines = self.full_code.splitlines()
-            logger.info(f'=== {file_path} ===')
+            logger.info(f'file: {file_path}')
             for call in self.surrounding_api_calls:
                 start = call.func.lineno - 3
                 end = start + 4
@@ -54,11 +54,11 @@ class PatternMiner:
         self.repo_list = repo_list
 
     def mine(self):
-        for repo_name in self.repo_list:
-            self.mine_repo(repo_name)
+        for n, repo_name in enumerate(self.repo_list, start=1):
+            self.mine_repo(repo_name, n)
 
-    def mine_repo(self, repo_name):
-        logger.info(f'----{repo_name}----')
+    def mine_repo(self, repo_name, n):
+        logger.info(f'Repo {n}: {repo_name}')
         try:
             repo_root = download_repo(repo_name)
         except:
@@ -66,16 +66,17 @@ class PatternMiner:
             return
         for path in Path(repo_root).rglob('*.py'):
             try:
-                file_miner = FileMiner(path)
+                file_miner = FileMiner(path, repo_root)
                 file_miner.mine()
             except SyntaxError:
                 logger.error('Syntax error')
 
 
 class FileMiner:
-    def __init__(self, filepath):
+    def __init__(self, filepath, repo_root):
         self.surrounding_api_calls = []
         self.filepath = filepath
+        self.repo_root = repo_root
         with open(self.filepath, "r") as source:
             self.code = source.read()
 
@@ -92,7 +93,7 @@ class FileMiner:
             init_method = find_method(cls, '__init__')
             init_visitor = InitVisitor(init_method, self.code)
             init_visitor.do_visit()
-            init_visitor.print(self.filepath)
+            init_visitor.print(os.path.relpath(self.filepath, start=self.repo_root))
 
 
 repo_folder = '/media/mohayemin/Work/PhD/LibMigProto-Data/clients'
