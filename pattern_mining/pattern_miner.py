@@ -1,4 +1,5 @@
 import ast
+import logging
 import os
 import urllib
 import zipfile
@@ -6,6 +7,15 @@ from pathlib import Path
 from typing import Any
 
 from pattern_mining.helper import *
+
+logging.basicConfig(filename='out.txt',
+                    filemode='a',
+                    # format='%(asctime)s,%(msecs)d %(name)s %(levelname)s %(message)s',
+                    format='%(message)s',
+                    datefmt='%H:%M:%S',
+                    level=logging.DEBUG)
+
+logger = logging.getLogger(__name__)
 
 
 class InitVisitor(ast.NodeVisitor):
@@ -29,14 +39,14 @@ class InitVisitor(ast.NodeVisitor):
     def print(self, file_path):
         if self.surrounding_api_calls:
             code_lines = self.full_code.splitlines()
-            print(f'=== {file_path} ===')
+            logger.info(f'=== {file_path} ===')
             for call in self.surrounding_api_calls:
                 start = call.func.lineno - 3
                 end = start + 4
                 if start < 0:
                     start = 0
-                print(f'line {call.func.lineno}: {call.func.attr}')
-                print(*code_lines[start: end], sep='\n')
+                logger.info(f'line {call.func.lineno}: {call.func.attr}\n')
+                logger.info('\n'.join(code_lines[start: end]))
 
 
 class PatternMiner:
@@ -48,15 +58,18 @@ class PatternMiner:
             self.mine_repo(repo_name)
 
     def mine_repo(self, repo_name):
-        print(f'----{repo_name}----')
+        logger.info(f'----{repo_name}----')
         try:
             repo_root = download_repo(repo_name)
         except:
-            print('FAILED')
+            logger.error('FAILED')
             return
         for path in Path(repo_root).rglob('*.py'):
-            file_miner = FileMiner(path)
-            file_miner.mine()
+            try:
+                file_miner = FileMiner(path)
+                file_miner.mine()
+            except SyntaxError:
+                logger.error('Syntax error')
 
 
 class FileMiner:
@@ -80,7 +93,6 @@ class FileMiner:
             init_visitor = InitVisitor(init_method, self.code)
             init_visitor.do_visit()
             init_visitor.print(self.filepath)
-
 
 
 repo_folder = '/media/mohayemin/Work/PhD/LibMigProto-Data/clients'
@@ -113,6 +125,7 @@ def download_repo(repo_fullname):
 def get_repo_list():
     with open('./repositories.txt') as file:
         repos = file.read().splitlines()
+    repos.sort()
     return repos
 
 
@@ -121,9 +134,9 @@ if __name__ == '__main__':
     # root = '/media/mohayemin/Work/PhD/LibMigProto-Data/ocr_kor'
     # root = '/media/mohayemin/Work/PhD/LibMigProto-Data/Bringing-Old-Photos-Back-to-Life'
 
-    file_path = '/media/mohayemin/Work/PhD/soar-fork/autotesting/benchmarks_tf/alexnet.py'
-    file_miner = FileMiner(file_path)
-    file_miner.mine()
+    # file_path = '/media/mohayemin/Work/PhD/soar-fork/autotesting/benchmarks_tf/alexnet.py'
+    # file_miner = FileMiner(file_path)
+    # file_miner.mine()
 
-    # list_of_repos = get_repo_list()
-    # PatternMiner(list_of_repos).mine()
+    list_of_repos = get_repo_list()
+    PatternMiner(list_of_repos).mine()
