@@ -1,4 +1,5 @@
 import ast
+import csv
 import logging
 import os
 import urllib
@@ -16,6 +17,7 @@ logging.basicConfig(filename='out.txt',
                     level=logging.DEBUG)
 
 logger = logging.getLogger(__name__)
+
 
 
 class InitVisitor(ast.NodeVisitor):
@@ -66,17 +68,19 @@ class PatternMiner:
             return
         for path in Path(repo_root).rglob('*.py'):
             try:
-                file_miner = FileMiner(path, repo_root)
+                file_miner = FileMiner(path, repo_root, repo_name)
                 file_miner.mine()
             except SyntaxError:
                 logger.error('Syntax error')
 
 
 class FileMiner:
-    def __init__(self, filepath, repo_root):
+    def __init__(self, absolute_path, repo_root, repo_name):
         self.surrounding_api_calls = []
-        self.filepath = filepath
-        self.repo_root = repo_root
+        self.filepath = absolute_path
+        self.repo_name = repo_name
+        self.relative_path = os.path.relpath(self.filepath, start=repo_root)
+
         with open(self.filepath, "r") as source:
             self.code = source.read()
 
@@ -91,9 +95,23 @@ class FileMiner:
         is_model = is_torch_model_class(cls)
         if is_model:
             init_method = find_method(cls, '__init__')
-            init_visitor = InitVisitor(init_method, self.code)
-            init_visitor.do_visit()
-            init_visitor.print(os.path.relpath(self.filepath, start=self.repo_root))
+            self.log_cooccurrences(init_method)
+            # init_visitor = InitVisitor(init_method, self.code)
+            # init_visitor.do_visit()
+            # init_visitor.print(os.path.relpath(self.filepath, start=self.repo_root))
+
+    def log_cooccurrences(self, init_method: ast.FunctionDef):
+        statements = init_method.body
+        if len(statements) < 2:
+            return
+
+        prev_name = function_name_from_assignment(statements[0])
+        for next_stm in statements[1:]:
+            next_name = function_name_from_assignment(next_stm)
+            if prev_name[1] or next_name[1]:
+                if prev_name[0] and next_name[0]:
+                    out_writer.writerow([prev_name[0], next_name[0], self.repo_name, self.relative_path, next_stm.lineno])
+            prev_name = next_name
 
 
 repo_folder = '/media/mohayemin/Work/PhD/LibMigProto-Data/clients'
@@ -131,13 +149,16 @@ def get_repo_list():
 
 
 if __name__ == '__main__':
-    # root = '/media/mohayemin/Work/PhD/soar-fork/autotesting/benchmarks_tf'
-    # root = '/media/mohayemin/Work/PhD/LibMigProto-Data/ocr_kor'
-    # root = '/media/mohayemin/Work/PhD/LibMigProto-Data/Bringing-Old-Photos-Back-to-Life'
+    with open('all_occurrences.csv', 'w') as file:
+        out_writer = csv.writer(file)
+        out_writer.writerow(["first", "second", "repository", "file", "line"])
+        # root = '/media/mohayemin/Work/PhD/soar-fork/autotesting/benchmarks_tf'
+        # root = '/media/mohayemin/Work/PhD/LibMigProto-Data/ocr_kor'
+        # root = '/media/mohayemin/Work/PhD/LibMigProto-Data/Bringing-Old-Photos-Back-to-Life'
 
-    # file_path = '/media/mohayemin/Work/PhD/soar-fork/autotesting/benchmarks_tf/alexnet.py'
-    # file_miner = FileMiner(file_path)
-    # file_miner.mine()
+        # file_path = '/media/mohayemin/Work/PhD/soar-fork/autotesting/benchmarks_tf/auto_encoder.py'
+        # file_miner = FileMiner(file_path, '/media/mohayemin/Work/PhD/soar-fork/autotesting/', 'SOAR Benchmarks')
+        # file_miner.mine()
 
-    list_of_repos = get_repo_list()
-    PatternMiner(list_of_repos).mine()
+        list_of_repos = get_repo_list()
+        PatternMiner(list_of_repos).mine()
