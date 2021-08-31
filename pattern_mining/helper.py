@@ -1,7 +1,21 @@
 import ast
-from typing import Optional, Union
+from typing import Optional, Union, Any
 
 import torch
+
+
+class CallVisitor(ast.NodeVisitor):
+    def __init__(self, init_method: ast.FunctionDef,):
+        self.init_method = init_method
+        self.calls: [ast.Call] = []
+
+    def find_calls(self) -> [ast.Call]:
+        self.visit(self.init_method)
+        return self.calls
+
+    def visit_Call(self, call: ast.Call) -> Any:
+        self.calls.append(call)
+        self.generic_visit(call)
 
 
 def is_torch_model_class(cls: ast.ClassDef):
@@ -39,8 +53,10 @@ def function_name_from_assignment(assignment: ast.stmt):
 
         if isinstance(val, ast.Call):
             name = function_name(val.func)
-        if isinstance(val, ast.Lambda) and isinstance(val.body, ast.Call):
-            name = function_name(val.body.func)
+        elif isinstance(val, ast.Lambda) and isinstance(val.body, ast.Call):
+            name = "lambda:" + function_name(val.body.func)
+        else:
+            name = 'unknown'
 
     name = name or ''
     is_torch = hasattr(torch.nn, name)
@@ -49,3 +65,6 @@ def function_name_from_assignment(assignment: ast.stmt):
         name = 'torch.nn' + name
 
     return name, is_torch
+
+
+

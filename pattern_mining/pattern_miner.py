@@ -2,58 +2,30 @@ import ast
 import csv
 import logging
 import os
+import sys
 import urllib
 import zipfile
 from pathlib import Path
-from typing import Any
+from typing import List
 
 from pattern_mining.helper import *
+from pattern_mining.torch_model_diff import TorchModelDiff
 
 logging.basicConfig(filename='out.txt',
                     filemode='a',
                     # format='%(asctime)s,%(msecs)d %(name)s %(levelname)s %(message)s',
                     format='%(message)s',
                     datefmt='%H:%M:%S',
-                    level=logging.DEBUG)
+                    level=logging.INFO)
 
 logger = logging.getLogger(__name__)
-
-
-
-class InitVisitor(ast.NodeVisitor):
-    def __init__(self, init_method: ast.FunctionDef, full_code: str):
-        self.surrounding_api_calls: [ast.Call] = []
-        self.init_method = init_method
-        self.full_code = full_code
-
-    def do_visit(self):
-        self.visit(self.init_method)
-
-    def visit_Call(self, call: ast.Call) -> Any:
-        func: ast.Attribute = call.func
-        if isinstance(func, ast.Attribute):
-            func_name = str(func.attr)
-            if any(func in func_name for func in ['permute', 'long', 'view']):
-                self.surrounding_api_calls.append(call)
-
-        self.generic_visit(call)
-
-    def print(self, file_path):
-        if self.surrounding_api_calls:
-            code_lines = self.full_code.splitlines()
-            logger.info(f'file: {file_path}')
-            for call in self.surrounding_api_calls:
-                start = call.func.lineno - 3
-                end = start + 4
-                if start < 0:
-                    start = 0
-                logger.info(f'line {call.func.lineno}: {call.func.attr}\n')
-                logger.info('\n'.join(code_lines[start: end]))
+logger.addHandler(logging.StreamHandler(sys.stdout))
 
 
 class PatternMiner:
     def __init__(self, repo_list):
         self.repo_list = repo_list
+        self.frequencies = {}
 
     def mine(self):
         for n, repo_name in enumerate(self.repo_list, start=1):
@@ -68,53 +40,35 @@ class PatternMiner:
             return
         for path in Path(repo_root).rglob('*.py'):
             try:
-                file_miner = FileMiner(path, repo_root, repo_name)
-                file_miner.mine()
+                self.mine_file(path, repo_name)
             except SyntaxError:
                 logger.error('Syntax error')
 
+    def mine_file(self, file_path, repo: str):
+        with open(file_path, "r") as source:
+            code = source.read()
+            tree = ast.parse(code)
+            classes = [item for item in tree.body if isinstance(item, ast.ClassDef)]
+            code_lines = code.splitlines()
+            for cls in classes:
+                self.mine_class(cls, repo, file_path, code_lines)
 
-class FileMiner:
-    def __init__(self, absolute_path, repo_root, repo_name):
-        self.surrounding_api_calls = []
-        self.filepath = absolute_path
-        self.repo_name = repo_name
-        self.relative_path = os.path.relpath(self.filepath, start=repo_root)
-
-        with open(self.filepath, "r") as source:
-            self.code = source.read()
-
-        tree = ast.parse(self.code)
-        self.classes = [item for item in tree.body if isinstance(item, ast.ClassDef)]
-
-    def mine(self):
-        for cls in self.classes:
-            self.mine_class(cls)
-
-    def mine_class(self, cls: ast.ClassDef) -> Any:
+    def mine_class(self, cls: ast.ClassDef, repo: str, file_path: str, code_lines) -> Any:
         is_model = is_torch_model_class(cls)
         if is_model:
-            init_method = find_method(cls, '__init__')
-            self.log_cooccurrences(init_method)
-            # init_visitor = InitVisitor(init_method, self.code)
-            # init_visitor.do_visit()
-            # init_visitor.print(os.path.relpath(self.filepath, start=self.repo_root))
-
-    def log_cooccurrences(self, init_method: ast.FunctionDef):
-        statements = init_method.body
-        if len(statements) < 2:
-            return
-
-        prev_name = function_name_from_assignment(statements[0])
-        for next_stm in statements[1:]:
-            next_name = function_name_from_assignment(next_stm)
-            if prev_name[1] or next_name[1]:
-                if prev_name[0] and next_name[0]:
-                    out_writer.writerow([prev_name[0], next_name[0], self.repo_name, self.relative_path, next_stm.lineno])
-            prev_name = next_name
+            call_diff: List[ast.Call] = TorchModelDiff(cls).get_diff()
+            for c in call_diff:
+                out_writer.writerow([
+                    function_name(c.func),
+                    repo,
+                    file_path,
+                    c.lineno,
+                    code_lines[c.lineno - 1].strip(),
+                ])
 
 
 repo_folder = '/media/mohayemin/Work/PhD/LibMigProto-Data/clients'
+repo_folder = '/home/mohayemin/Desktop/client_repositories'
 
 
 def download_repo(repo_fullname):
@@ -149,9 +103,9 @@ def get_repo_list():
 
 
 if __name__ == '__main__':
-    with open('all_occurrences.csv', 'w') as file:
+    with open('all_diffs.csv', 'w') as file:
         out_writer = csv.writer(file)
-        out_writer.writerow(["first", "second", "repository", "file", "line"])
+        out_writer.writerow(["API", "repository", "file", "line", "code"])
         # root = '/media/mohayemin/Work/PhD/soar-fork/autotesting/benchmarks_tf'
         # root = '/media/mohayemin/Work/PhD/LibMigProto-Data/ocr_kor'
         # root = '/media/mohayemin/Work/PhD/LibMigProto-Data/Bringing-Old-Photos-Back-to-Life'
@@ -160,5 +114,12 @@ if __name__ == '__main__':
         # file_miner = FileMiner(file_path, '/media/mohayemin/Work/PhD/soar-fork/autotesting/', 'SOAR Benchmarks')
         # file_miner.mine()
 
+        logger.info('start mining')
+        list_of_repos = [
+            '__soar_benchmarks/benchmarks'
+        ]
         list_of_repos = get_repo_list()
+
+        logger.info(f'{len(list_of_repos)} repositories')
         PatternMiner(list_of_repos).mine()
+        logger.info('done mining')
