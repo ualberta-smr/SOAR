@@ -34,7 +34,7 @@ def forward(self, x):
     x = self.v3(x)
     return x
 ```
-We could not find any usages of `view`, `permute` and `long` in the `__init__` methods of the model classes.
+We could not find any usages of `view`, `permute` and `long` in the `__init__` methods of the model classes of the client projects.
 Therefore, we concluded that we cannot automatically find the reshaping APIs.
 
 However, we then looked into some client code manually and figured that the reshaping APIs are typically used directly inside the 
@@ -57,11 +57,11 @@ For this we extracted all method calls in the forward method,
 and discarded the ones that are not from one of the variables assigned in the `__init__`.
 In the example above, we see that `permute`, `v2` and `v3` are the method calls in `forward` 
 and `v2` and `v3` are initialized in `__init__`.
-Therefore, we conclude that `permute` is a reshaping API.
+Therefore, we assume that `permute` is a reshaping API.
 
 We run this analysis on all 271 client repositories and logged the reshaping API usages.
-We kept only the 549 APIs which are in the `torch.Tensor` module because all three APIs used in SOAR are in this module.
-199 APIs have at least one occurrence and top 8 account for 50% of the occurrences.
+We kept only the 549 APIs which are in the `torch.Tensor` module because all three SOAR reshaping APIs are in this module.
+199 of these APIs have at least one occurrence and top 8 account for 50% of the occurrences.
 The detail results can be found 
 [in this spreadsheet](https://docs.google.com/spreadsheets/d/1x-5H1rUOKBbwJQLSwPPbmcPZlDpK4FelMvusVYig9dU/edit#gid=999917312).
 The `diffs` tab has all the occurrences and the `diffs_summary` tab has the frequency and other stats.
@@ -69,4 +69,9 @@ The `diffs` tab has all the occurrences and the `diffs_summary` tab has the freq
 `view`, `permute` and `long` rank 1st, 5th and 38th respectively.
 This is not mentioned in the paper why SOAR uses these three APIs.
 
+**Possible Todo:**  
+Check whether it is possible to correctly synthesize the SOAR benchmarks using the top reshaping APIs we found.
 
+**Hurdle:**  
+The code related to the reshaping APIs are hard coded. We either need to do something similar or find a way to automate this.
+The code here: [torch_enumerator.py:173](https://github.com/ualberta-smr/SOAR/blob/master/synthesis/synthesizer/tf_to_torch/torch_enumerator.py#L173).
