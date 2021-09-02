@@ -60,9 +60,13 @@ and `v2` and `v3` are initialized in `__init__`.
 Therefore, we conclude that `permute` is a reshaping API.
 
 We run this analysis on all 271 client repositories and logged the reshaping API usages.
+We kept only the 549 APIs which are in the `torch.Tensor` module because all three APIs used in SOAR are in this module.
+199 APIs have at least one occurrence and top 8 account for 50% of the occurrences.
 The detail results can be found 
-[in this spreadsheet](https://docs.google.com/spreadsheets/d/1x-5H1rUOKBbwJQLSwPPbmcPZlDpK4FelMvusVYig9dU/edit#gid=1167016238).
+[in this spreadsheet](https://docs.google.com/spreadsheets/d/1x-5H1rUOKBbwJQLSwPPbmcPZlDpK4FelMvusVYig9dU/edit#gid=999917312).
 The `diffs` tab has all the occurrences and the `diffs_summary` tab has the frequency and other stats.
-The top 23 out of 2714 APIs accounts for 50% occurrences. `view`, `permute` and `long` rank 1st, 9th and 63rd respectively.
 
-Now, we can replace use the top ranked APIs as SOAR's reshaping API to see whether SOAR can synthesize properly.
+`view`, `permute` and `long` rank 1st, 5th and 38th respectively.
+This is not mentioned in the paper why SOAR uses these three APIs.
+
+
